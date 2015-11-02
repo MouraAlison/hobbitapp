@@ -1,0 +1,22 @@
+### Strings Name ###
+    categoria_seu_valor,
+    categoria_identificador
+
+### View's Id ###
+    nomeDaViewNomeDaActivityConteudoDaView,
+    nomeDaViewNomeDaActivityIdentificador
+
+### Color's Name ###
+    nome_da_cor_referencia
+
+### Activities Name ###
+    NomeDaActivityActivity
+
+### Adapter's Name ###
+    NomeDoAdapterAdapter
+
+### Style's Name ###
+    NomeDoStyle
+
+### Selector's Name ###
+    selector_nome_do_selector

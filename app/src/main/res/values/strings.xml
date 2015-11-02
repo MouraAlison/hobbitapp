@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Hobbit</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_fotos">FotosActivity</string>
+    <string name="menu_drawer_capturar_imagem">Capturar imagem</string>
+    <string name="menu_drawer_galeria_fotos">Galeria de Fotos</string>
+    <string name="menu_drawer_slide_show">Slideshow</string>
+    <string name="menu_drawer_tools">Ferramentas</string>
+    <string name="menu_drawer_share">Compartilhar</string>
+    <string name="menu_drawer_send">Enviar</string>
+    <string name="menu_drawer_title_comunication">Comunicação</string>
+    <string name="menu_drawer_home">Home</string>
+    <string name="title_activity_user_list">UserListActivity</string>
+    <string name="title_user_list">Lista de Usuários</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+</resources>
