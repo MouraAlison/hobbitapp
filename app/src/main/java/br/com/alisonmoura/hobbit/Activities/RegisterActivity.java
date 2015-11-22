@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -44,6 +45,9 @@ public class RegisterActivity extends AppCompatActivity {
     @Bind(R.id.editTextRegisterActivityUserPassword)
     EditText senha;
 
+    @Bind(R.id.buttonRegisterActivitySalvar)
+    Button btnSalvar;
+
     Usuario usuarioIntent;
 
     private static final int CAMERA_REQUEST = 123;
@@ -62,12 +66,13 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        nome = (EditText) findViewById(R.id.editTextRegisterActivityUserName);
+//        foto = (ImageView) findViewById(R.id.imageViewRegisterActivityUserImage);
+//        login = (EditText) findViewById(R.id.editTextRegisterActivityUserLogin);
+//        mail = (EditText) findViewById(R.id.editTextRegisterActivityUserMail);
+//        senha = (EditText) findViewById(R.id.editTextRegisterActivityUserPassword);
 
-//        String pathA = "External cache dir path: " + Uri.fromFile(getExternalCacheDir()).getPath();
-//        String pathD = "Cache dir path: " + Uri.fromFile(getCacheDir()).getPath();
-//        String pathB = "Files dir path: "+getFilesDir().getPath();
-//        String pathC = "Files dir absolute path: "+getFilesDir().getAbsolutePath();
+        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -91,26 +96,35 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     foto.setImageResource(R.drawable.default_user_image);
                 }
-            }
-        } else
-            foto.setImageResource(R.drawable.default_user_image);
+            } else foto.setImageResource(R.drawable.default_user_image);
+        } else foto.setImageResource(R.drawable.default_user_image);
 
     }
 
     @OnClick(R.id.buttonRegisterActivitySalvar)
-    public void saveUsuario(){
-        if(isValidFields()){
-            Usuario usuario = new Usuario();
-            usuario.setFoto(R.drawable.default_user_image);
-            usuario.setNome(nome.getText().toString());
-            usuario.setLogin(login.getText().toString());
-            usuario.setSenha(senha.getText().toString());
-            usuario.setEmail(mail.getText().toString());
+    public void saveUsuario() {
+        if (isValidFields()) {
+            if (usuarioIntent == null)
+                usuarioIntent = new Usuario();
+            usuarioIntent.setFoto(R.drawable.default_user_image);
+            usuarioIntent.setNome(nome.getText().toString());
+            usuarioIntent.setLogin(login.getText().toString());
+            usuarioIntent.setSenha(senha.getText().toString());
+            usuarioIntent.setEmail(mail.getText().toString());
 
             //salva o usuario
-            usuario.save();
-        }else
-            Toast.makeText(RegisterActivity.this, "Preencha todos os campos!", Toast.LENGTH_LONG).show();
+            usuarioIntent.save();
+            usuarioIntent = new Usuario();
+
+            Intent i = new Intent(RegisterActivity.this, UserListActivity.class);
+            i.putExtra(Constants.EXTRA_SAVE_SUCESS_FOR_USER_LIST_ACTIVITY, "Usuário salvo com sucesso!");
+            startActivity(i);
+            finish();
+
+        } else
+            //Toast.makeText(RegisterActivity.this, "Preencha todos os campos!", Toast.LENGTH_LONG).show();
+            Snackbar.make(this.btnSalvar, "Preencha todos os campos!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
     }
 
     @OnClick(R.id.imageViewRegisterActivityUserImage)
@@ -132,10 +146,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             //Criando um arquivo para armazenar a imagem cortada em um local não cache
-            croped = new File(getFilesDir(),"croped-profile.jpg");
+            croped = new File(getFilesDir(), "croped-profile.jpg");
             cropedUri = Uri.fromFile(croped);
             //Criando um CropImageIntentBuilder e configurando a largura e alturo do corte e o URI onde será salvo a imagem cortada
-            CropImageIntentBuilder cropIntent = new CropImageIntentBuilder(200,200, cropedUri);
+            CropImageIntentBuilder cropIntent = new CropImageIntentBuilder(200, 200, cropedUri);
             //Setando a cor das linhas de corte
             cropIntent.setOutlineCircleColor(0xFF03A9F4);
             cropIntent.setCircleCrop(true);
@@ -143,58 +157,28 @@ public class RegisterActivity extends AppCompatActivity {
             cropIntent.setSourceImage(captureUri);
             //Start esperando um resultado na Intent do CropImage
             startActivityForResult(cropIntent.getIntent(RegisterActivity.this), CROP_REQUEST);
-        } else if(requestCode == CROP_REQUEST && resultCode == RESULT_OK) {
+        } else if (requestCode == CROP_REQUEST && resultCode == RESULT_OK) {
             Bitmap imageCroped = BitmapFactory.decodeFile(croped.getAbsolutePath());
             foto.setImageBitmap(imageCroped);
-        }else {
+        } else {
             Toast.makeText(RegisterActivity.this, "Imagem não carregada", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private boolean isValidFields(){
+    private boolean isValidFields() {
 
-        if(foto.getDrawable()== null){
+        if (foto.getDrawable() == null) {
             return false;
-        }else if(TextUtils.isEmpty(nome.getText())){
+        } else if (TextUtils.isEmpty(nome.getText())) {
             return false;
-        }else if(TextUtils.isEmpty(login.getText())){
+        } else if (TextUtils.isEmpty(login.getText())) {
             return false;
-        }else if(TextUtils.isEmpty(senha.getText())){
+        } else if (TextUtils.isEmpty(senha.getText())) {
             return false;
-        }else if(TextUtils.isEmpty(mail.getText())){
+        } else if (TextUtils.isEmpty(mail.getText())) {
             return false;
         }
-
         return true;
     }
-
-
-//    @OnClick(R.id.imageViewRegisterActivityUserImage)
-//    public void changeImageProfile() {
-//        File image = new File(getExternalCacheDir(), "teste");
-//        captureUri = Uri.fromFile(image);
-//        Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, captureUri);
-//        startActivityForResult(intentCamera, CAMERA_REQUEST);
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        File croppedImage = new File(getFilesDir(),"testeCropped.jpg");
-//        if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
-//            Uri croppedImageUri = Uri.fromFile(croppedImage);
-//            CropImageIntentBuilder crop = new CropImageIntentBuilder(200, 200, croppedImageUri);
-//            crop.setOutlineCircleColor(0xFF03A9F4);
-//            crop.setSourceImage(captureUri);
-//            startActivityForResult(crop.getIntent(RegisterActivity.this), CROP_REQUEST);
-//        }else if(requestCode == CROP_REQUEST && resultCode == RESULT_OK){
-//            foto.setImageBitmap(BitmapFactory.decodeFile(croppedImage.getAbsolutePath()));
-//        }else{
-//            Toast.makeText(RegisterActivity.this, "Imagem não carregada", Toast.LENGTH_SHORT).show();
-//        }
-//
-//    }
-
 }

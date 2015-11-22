@@ -25,6 +25,7 @@ import br.com.alisonmoura.hobbit.R;
 import br.com.alisonmoura.hobbit.Utils.Constants;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import se.emilsjolander.sprinkles.Query;
 
 public class UserListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,25 +45,9 @@ public class UserListActivity extends AppCompatActivity
     @Bind(R.id.listViewUserListActivityUserList)
     ListView listView;
 
-    List<Usuario> usuarios;
+    private List<Usuario> usuarios;
 
-    private String[] nomes =
-            {
-                    "Alison Moura",
-                    "Nayara Romeiro",
-                    "Virmerson Bento",
-                    "Cesar Bassani",
-                    "Vinicius Souza",
-                    "Silvio Chapolin",
-                    "Pedro Bispo",
-                    "Alison Moura",
-                    "Nayara Romeiro",
-                    "Virmerson Bento",
-                    "Cesar Bassani",
-                    "Vinicius Souza",
-                    "Silvio Chapolin",
-                    "Pedro Bispo",
-            };
+    private UserListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +56,19 @@ public class UserListActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().containsKey(Constants.EXTRA_SAVE_SUCESS_FOR_USER_LIST_ACTIVITY)) {
+                if (getIntent().getExtras().getString(Constants.EXTRA_SAVE_SUCESS_FOR_USER_LIST_ACTIVITY) != null)
+                    Snackbar.make(fab, getIntent().getExtras().getString(Constants.EXTRA_SAVE_SUCESS_FOR_USER_LIST_ACTIVITY), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+            }
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(UserListActivity.this, RegisterActivity.class));
+                finish();
             }
         });
 
@@ -86,7 +79,7 @@ public class UserListActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        final UserListAdapter adapter = new UserListAdapter(this,getUsuarioList());
+        adapter = new UserListAdapter(this, getUsuarioList());
 
         listView.setAdapter(adapter);
 
@@ -94,12 +87,13 @@ public class UserListActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                Usuario usuarioClicado = adapter.getItem(position);
+                Usuario usuarioClicado = (Usuario) listView.getAdapter().getItem(position);
                 Intent i = new Intent(UserListActivity.this, RegisterActivity.class);
-                if(usuarioClicado!=null){
+                if (usuarioClicado != null) {
                     i.putExtra(Constants.EXTRA_USER_FOR_REGISTER_ACTIVITY, usuarioClicado);
                 }
                 startActivity(i);
+                finish();
 
 
             }
@@ -107,18 +101,15 @@ public class UserListActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter = new UserListAdapter(this, getUsuarioList());
+        listView.setAdapter(adapter);
+    }
+
     public List<Usuario> getUsuarioList() {
-
-        usuarios = new ArrayList<>();
-
-        for(String nome:nomes){
-            Usuario usuario = new Usuario();
-            usuario.setNome(nome);
-
-            usuarios.add(usuario);
-        }
-
-        return usuarios;
+        return Query.all(Usuario.class).get().asList();
     }
 
     @Override

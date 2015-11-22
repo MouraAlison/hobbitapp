@@ -12,12 +12,12 @@ import se.emilsjolander.sprinkles.annotations.Table;
  * Created by alisonmoura on 25/10/15.
  */
 @Table("Usuario")
-public class Usuario extends Model implements Serializable{
+public class Usuario extends Model implements Serializable {
 
     @AutoIncrement
     @Key
     @Column("id")
-    private Long id;
+    private long id;
     @Column("nome")
     private String nome;
     @Column("email")
@@ -27,17 +27,19 @@ public class Usuario extends Model implements Serializable{
     @Column("senha")
     private String senha;
     @Column("foto")
-    private int foto;
+    private Integer foto;
 
     public Usuario() {
 
     }
 
-    public Long getId() {
+    //Getters e Setters
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -73,13 +75,15 @@ public class Usuario extends Model implements Serializable{
         this.senha = senha;
     }
 
-    public int getFoto() {
+    public Integer getFoto() {
         return foto;
     }
 
     public void setFoto(int foto) {
         this.foto = foto;
     }
+
+    //Hash Code and Equals
 
     @Override
     public boolean equals(Object o) {
@@ -88,25 +92,28 @@ public class Usuario extends Model implements Serializable{
 
         Usuario usuario = (Usuario) o;
 
-        if (foto != usuario.foto) return false;
-        if (id != null ? !id.equals(usuario.id) : usuario.id != null) return false;
+        if (id != usuario.id) return false;
         if (nome != null ? !nome.equals(usuario.nome) : usuario.nome != null) return false;
         if (email != null ? !email.equals(usuario.email) : usuario.email != null) return false;
         if (login != null ? !login.equals(usuario.login) : usuario.login != null) return false;
-        return !(senha != null ? !senha.equals(usuario.senha) : usuario.senha != null);
+        if (senha != null ? !senha.equals(usuario.senha) : usuario.senha != null) return false;
+        return !(foto != null ? !foto.equals(usuario.foto) : usuario.foto != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (nome != null ? nome.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (senha != null ? senha.hashCode() : 0);
-        result = 31 * result + foto;
+        result = 31 * result + (foto != null ? foto.hashCode() : 0);
         return result;
     }
+
+
+    //toSring
 
     @Override
     public String toString() {

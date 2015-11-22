@@ -12,13 +12,6 @@ public class CreateUsuarioMigration extends Migration {
     @Override
     protected void doMigration(SQLiteDatabase db) {
 
-        db.execSQL("CREATE TABLE Usuario(" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "nome TEXT," +
-                "email TEXT," +
-                "login TEXT," +
-                "senha TEXT," +
-                "foto INTEGER" +
-                ")");
+        db.execSQL("CREATE TABLE Usuario (id INTEGER PRIMARY KEY AUTOINCREMENT,nome TEXT,email TEXT,login TEXT,senha TEXT,foto INTEGER)");
     }
 }

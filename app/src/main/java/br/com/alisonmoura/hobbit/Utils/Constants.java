@@ -6,5 +6,6 @@ package br.com.alisonmoura.hobbit.Utils;
 public class Constants {
 
     public static final String EXTRA_USER_FOR_REGISTER_ACTIVITY = "usuario";
+    public static final String EXTRA_SAVE_SUCESS_FOR_USER_LIST_ACTIVITY = "user_sucess_save";
 
 }
